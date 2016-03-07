@@ -50,7 +50,7 @@ local Terrain = {
 	clear = function(self)
 		if self.active then
 			self.storage:ClearAllChildren();
-			self.acitve = not self.active;
+			self.active = not self.active;
 		else
 			return;
 		end;
