@@ -46,4 +46,16 @@ local Terrain = {
 		end;
 	end;
 	
+	-- remove any existing terrain.
+	clear = function(self)
+		if self.active then
+			self.storage:ClearAllChildren();
+			self.acitve = not self.active;
+		else
+			return;
+		end;
+	end;
+	
 };
+
+Terrain:create(20, 20);
