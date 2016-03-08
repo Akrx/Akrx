@@ -2,21 +2,21 @@
 
 --# Referencing services.
 
-local W = game:GetService('Workspace');
+local W = game:GetService("Workspace");
 
 --# Referencing variables.
 
 -- throw a warning message to the output.
 local function warn(message)
-	local template = '%s; %s';
-	print(string.format(template, script.Name, message));
+  local template = "%s; %s";
+  print(string.format(template, script.Name, message));
 end;
 
 local Terrain = {
 	
 	active = false;
-	
-	-- generate random terrain with the given x and z arguments.
+
+	-- genereate random terrain with the given x and z arguments.
 	create = function(self, x, z)
 		if x >= 20 and z >= 20 then
 			if self.active then
@@ -28,7 +28,7 @@ local Terrain = {
 					storage.Name = 'Storage';
 					self.storage = storage;
 				end;
-				self.active = not self.active;
+				self.active = not self.activer;
 				for x_axis = 1, x do
 					for z_axis = 1, z do
 						local territory = Instance.new('Part', self.storage);
@@ -45,7 +45,7 @@ local Terrain = {
 			return;
 		end;
 	end;
-	
+
 	-- remove any existing terrain.
 	clear = function(self)
 		if self.active then
@@ -55,7 +55,5 @@ local Terrain = {
 			return;
 		end;
 	end;
-	
-};
 
-Terrain:create(20, 20);
+};
