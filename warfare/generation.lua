@@ -14,6 +14,7 @@ local function warn(message)
 	print(string.format(template, script.Name, message));
 end;
 
+-- sort the teams based on who's actually playing.
 local function sortTeams()
 	local new_teams = {};
 	for i, v in next, T:GetChildren() do
