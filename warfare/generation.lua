@@ -31,6 +31,8 @@ local Terrain = {
 	
 	active = false;
 	
+	spawn_locations = {};
+	
 	-- generate random terrain with the given x and z arguments.
 	create = function(self, x, z)
 		if x >= 20 and z >= 20 then
@@ -71,7 +73,7 @@ local Terrain = {
 				wait();
 				local territory = terrain[math.random(1, #terrain)];
 				if last then
-					if (last.Position - territory.Position).magnitude >= 10 then
+					if self.getMagnitude(self, territory) then
 						local spawn_point = Instance.new('Part', territory);
 						spawn_point.Name = 'Spawn';
 						spawn_point.Size = Vector3.new(1, 1, 1);
@@ -80,17 +82,34 @@ local Terrain = {
 						last = spawn_point;
 					end;
 				else
-					local spawn_point = Instance.new('Part', territory);
-					spawn_point.Name = 'Spawn';
-					spawn_point.Size = Vector3.new(1, 1, 1);
-					spawn_point.BrickColor = teams[i].TeamColor;
-					spawn_point.CFrame = territory.CFrame * CFrame.new(0, 2.5, 0);
-					last = spawn_point;
+					if self.getMagnitude(self, territory) then
+						local spawn_point = Instance.new('Part', territory);
+						spawn_point.Name = 'Spawn';
+						spawn_point.Size = Vector3.new(1, 1, 1);
+						spawn_point.BrickColor = teams[i].TeamColor;
+						spawn_point.CFrame = territory.CFrame * CFrame.new(0, 2.5, 0);
+						last = spawn_point;
+					end;
 				end;
 			until
 			last;
 			last = nil;
 		end
+	end;
+	
+	-- get the magnitude between every spawn active.
+	getMagnitude = function(self, spawn)
+		if #self.spawn_locations < 1 then
+			return true;
+		else
+			for i = 1, #self.spawn_locations do
+				if (self.spawn_locations[i].Position - spawn.Position).magnitude > 20 then
+					return true;
+				else
+					return false;
+				end;
+			end;
+		end;
 	end;
 	
 	-- remove any existing terrain.
@@ -104,3 +123,6 @@ local Terrain = {
 	end;
 	
 };
+
+Terrain:create(40, 40);
+Terrain:spawn();
