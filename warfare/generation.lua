@@ -14,19 +14,6 @@ local function warn(message)
 	print(string.format(template, script.Name, message));
 end;
 
--- sort the teams based on who's actually playing.
-local function sortTeams()
-	local new_teams = {};
-	for i, v in next, T:GetChildren() do
-		for x, y in next, P:GetPlayers() do
-			if y.TeamColor == v.TeamColor then
-				table.insert(new_teams, v);
-			end;
-		end;
-	end;
-	return new_teams;
-end;
-
 local Terrain = {
 	
 	active = false;
@@ -66,49 +53,39 @@ local Terrain = {
 	-- instantiate spawn locations if that team is rendered 'active'.
 	spawn = function(self)
 		local teams = T:GetChildren();
+		local spawn_points = {};
 		local terrain = self.storage:GetChildren();
-		local last;
+		local complete;
 		for i = 1, #teams do
 			repeat
 				wait();
 				local territory = terrain[math.random(1, #terrain)];
-				if last then
-					if self.getMagnitude(self, territory) then
-						local spawn_point = Instance.new('Part', territory);
-						spawn_point.Name = 'Spawn';
-						spawn_point.Size = Vector3.new(1, 1, 1);
-						spawn_point.BrickColor = teams[i].TeamColor;
-						spawn_point.CFrame = territory.CFrame * CFrame.new(0, 2.5, 0);
-						last = spawn_point;
+				if #spawn_points >= 1 then
+					for x = 1, #spawn_points do
+						if (spawn_points[x].Position - territory.Position).magnitude > 10 then
+							complete = true;
+							local capital = Instance.new('Part', territory);
+							capital.Name = 'Capital';
+							capital.BrickColor = teams[i].TeamColor;
+							capital.Size = Vector3.new(1, 1, 1);
+							capital.Anchored = true;
+							capital.CFrame = territory.CFrame * CFrame.new(0, 2, 0);
+							table.insert(spawn_points, capital);
+						end;
 					end;
 				else
-					if self.getMagnitude(self, territory) then
-						local spawn_point = Instance.new('Part', territory);
-						spawn_point.Name = 'Spawn';
-						spawn_point.Size = Vector3.new(1, 1, 1);
-						spawn_point.BrickColor = teams[i].TeamColor;
-						spawn_point.CFrame = territory.CFrame * CFrame.new(0, 2.5, 0);
-						last = spawn_point;
-					end;
+					complete = true;
+					local capital = Instance.new('Part', territory);
+					capital.Name = 'Capital';
+					capital.BrickColor = teams[i].TeamColor;
+					capital.Size = Vector3.new(1, 1, 1);
+					capital.Anchored = true;
+					capital.CFrame = territory.CFrame * CFrame.new(0, 2, 0);
+					table.insert(spawn_points, capital);
 				end;
 			until
-			last;
-			last = nil;
-		end
-	end;
-	
-	-- get the magnitude between every spawn active.
-	getMagnitude = function(self, spawn)
-		if #self.spawn_locations < 1 then
-			return true;
-		else
-			for i = 1, #self.spawn_locations do
-				if (self.spawn_locations[i].Position - spawn.Position).magnitude > 20 then
-					return true;
-				else
-					return false;
-				end;
-			end;
+			complete;
+			complete = false;
 		end;
 	end;
 	
