@@ -89,6 +89,25 @@ local Terrain = {
 		end;
 	end;
 	
+	-- initialize the territories.
+	initialize = function(self)
+		for i, v in next, self.storage:GetChildren() do
+			local display = Instance.new('BillboardGui', v);
+			display.Name = 'Display';
+			display.Size = UDim2.new(1, 0, 1, 0);
+			display.StudsOffset = Vector3.new(0, 2.5, 0);
+			display.AlwaysOnTop = true;
+			local troop_display = Instance.new('TextLabel', display);
+			troop_display.Name = 'Troop Display';
+			troop_display.Size = UDim2.new(1, 0, 1, 0);
+			troop_display.Text = '0';
+			troop_display.TextColor3 = Color3.new(1, 1, 1);
+			troop_display.TextScaled = true;
+			troop_display.TextStrokeTransparency = 0.75;
+			troop_display.BackgroundTransparency = 1;
+		end;
+	end;
+	
 	-- remove any existing terrain.
 	clear = function(self)
 		if self.active then
@@ -100,6 +119,3 @@ local Terrain = {
 	end;
 	
 };
-
-Terrain:create(40, 40);
-Terrain:spawn();
